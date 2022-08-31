@@ -1,0 +1,23 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+  color: black;
+}
+li{
+  list-style: none;
+}
+i{
+  font-style: normal;
+}
+.clearbox::after,
+.clearbox::before{
+  content: "";
+  display: table;
+}
+.clearbox::after{
+  clear: both;
+}
