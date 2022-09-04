@@ -8,6 +8,6 @@ export function getBanner() {
 export function getplaylists() {
   return axios1({
     method: "get",
-    url: "/top/playlist?limit=10&order=hot"
+    url: "/top/playlist?limit=20&order=hot"
   })
 }
