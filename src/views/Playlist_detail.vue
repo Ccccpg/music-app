@@ -2,7 +2,7 @@
   <div>
     <van-swipe class="my-swipe" indicator-color="white" :show-indicators="false">
       <van-swipe-item>
-        <img :src="mdesc.coverImgUrl" alt="">
+        <van-image fit="cover" :src="mdesc.coverImgUrl" alt=""/>
         <div class="left">
           <div class="top">
             {{mdesc.name}}
@@ -11,7 +11,8 @@
             </div>
           </div>
           <div class="bottom">
-            <p v-if="mdesc.creator">创建者：<img :src="creator.avatarUrl" alt=""></p>
+            <p v-if="mdesc.creator">创建者：<img :src="creator.avatarUrl" alt="">{{'   '+mdesc.creator.nickname}}</p>
+            <p>曲目：{{mdesc.trackCount}}首</p>
             <p>播放次数：{{playCount}}</p>
           </div>
         </div>
@@ -39,14 +40,15 @@
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <!-- <van-cell v-for="(item,index) in songs" :key="item.id" :title="index+1+item.name" /> -->
-      <Playlists v-for="(item1,index) in songs" :key="item1.id" :songname="item1.name" :index="index" :author="item1.ar" :mv="item1.mv" :al="item1.al"></Playlists>
+      <Playlists v-for="(item1,index) in songlists" :key="item1.id" :songname="item1.name" :index="index" :author="item1.ar" :mv="item1.mv" :al="item1.al" :aid="item1.al.id" :sid="item1.id"></Playlists>
     </van-list>
   </div>
 </template>
 
 <script>
 import { getPlaylist, getPlaydesc } from '@/api/playlist_detail'
-import Playlists from '@/components/PLaylists.vue'
+import Playlists from '@/components/OneSongList.vue'
+import { mapMutations } from 'vuex'
 export default {
   name: 'playlist_detail',
   data() {
@@ -54,7 +56,7 @@ export default {
       loading: true,
       finished: false,
       mdesc: {},
-      songs: [],
+      songlists: [],
       num: 0
     }
   },
@@ -81,18 +83,19 @@ export default {
   methods: {
     async initinfor() {
       this.loading = true
-      this.num += 15
       const { data: res } = await getPlaylist(this.id, this.num)
       if (res.songs.length === 0) {
         return (this.finished = true)
       }
-      this.songs = [...this.songs, ...res.songs]
-      console.log('触发了一次刷新222!!!!!!!!!')
+      this.songlists = [...this.songlists, ...res.songs]
+      this.num += 15
+      this.UPATESONGLISTS(this.songlists)
       this.loading = false
     },
     onLoad() {
       this.initinfor()
-    }
+    },
+    ...mapMutations(['UPATESONGLISTS'])
   },
   components: {
     Playlists
@@ -105,9 +108,8 @@ export default {
   width: 100%;
   height: 30vh;
   padding: 5vw;
-  img {
+  .van-image {
     width: 50%;
-    height: 100%;
     border-radius: 10%;
     box-shadow: 1px 2px 9px 4px rgba(0, 0, 0, 0.2);
   }
@@ -119,6 +121,8 @@ export default {
     font-weight: 800;
     .top {
       .tags {
+        height: 4.5vh;
+        overflow: hidden;
         .van-tag {
           margin-right: 1vw;
           font-size: 3vw;
@@ -126,7 +130,7 @@ export default {
       }
     }
     .bottom {
-      margin-top: 4vh;
+      margin-top: 1vh;
       p {
         font-size: 3vw;
         font-weight: 400;
@@ -153,6 +157,7 @@ export default {
   height: 7vh;
   background-color: red;
   box-shadow: 1px 4px 9px 5px #ff000033;
+  margin-top: 2vh;
   .van-button {
     height: 100%;
     line-height: 7vh;

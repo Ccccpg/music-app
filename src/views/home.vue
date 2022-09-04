@@ -1,14 +1,14 @@
 <template>
-    <div class="home">
-      <van-swipe :autoplay="3000" indicator-color="red">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
-          <img v-lazy="image" />
-        </van-swipe-item>
-      </van-swipe>
-      <Iconlist></Iconlist>
-      <Findplaylists></Findplaylists>
-    </div>
-    
+  <div class="home">
+    <van-swipe :autoplay="3000" indicator-color="red">
+      <van-swipe-item v-for="(image, index) in images" :key="index">
+        <van-image :src="image" fit="cover" />
+      </van-swipe-item>
+    </van-swipe>
+    <Iconlist></Iconlist>
+    <Findplaylists></Findplaylists>
+  </div>
+
 </template>
 <script>
 // @ is an alias to /src
@@ -38,13 +38,14 @@ export default {
 
 <style lang="less" scoped>
 .van-swipe {
-  .van-swipe__track {
-    .van-swipe-item {
-      height: 25vh;
-      img {
-        width: 100%;
-        height: 100%;
-      }
+  margin-top: 1vh;
+  .van-swipe-item {
+    display: flex;
+    justify-content: center;
+    padding: 3vw;
+    .van-image {
+      width: 100%;
+      box-shadow: 1px 2px 8px 4px rgba(0, 0, 0, 0.2);
     }
   }
 }

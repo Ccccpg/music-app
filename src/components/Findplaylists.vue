@@ -69,10 +69,11 @@ export default {
       .van-swipe-item {
         position: relative;
         padding: 1vw;
+        margin: 1vw;
         img {
           width: 100%;
           height: 100%;
-          border-radius: 10%;
+          box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
         }
         p {
           padding: 0 1vw;

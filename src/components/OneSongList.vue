@@ -1,12 +1,12 @@
 <template>
-  <div class="oneplaylist clearbox">
+  <div class="oneplaylist clearbox" @click="getAlbum_(aid),updateSongIndex(),play()">
     <p>{{index+1}}</p>
     <div>
       <h1>{{songname}}</h1>
-      <span class="middle">
+      <div class="middle van-ellipsis">
         <i v-for="item in author" :key="item.id">{{item.name}}</i>
         <b>—{{al.name}}</b>
-      </span>
+      </div>
     </div>
     <span class="iconfont icon-bofangMV" v-if="mv!=0"></span>
 
@@ -14,8 +14,31 @@
 </template>
 
 <script>
+import { getAlbum } from '@/api/getAlbumByid'
+import { mapMutations, mapState } from 'vuex'
 export default {
-  props: ['index', 'songname', 'author', 'mv', 'al']
+  name:'PlayLists',
+  props: ['aid', 'index', 'songname', 'author', 'mv', 'al'],
+  computed: {
+    ...mapState({ paused: 'paused' })
+  },
+  methods: {
+    //获取该歌曲的所在专辑
+    async getAlbum_(aid) {
+      const album = await getAlbum(aid)
+      this.$store.commit('GETALBUM', album)
+    },
+    //更新vuex里的paused值为false
+    play() {
+      this.$store.commit('CHANGEPAUSED', true)
+    },
+    //更新当前歌曲的数组下标
+    updateSongIndex(){
+      this.UPATESONGINDEX(this.index)
+    },
+    ...mapMutations(['UPATESONGINDEX'])
+    
+  }
 }
 </script>
 
@@ -28,18 +51,21 @@ export default {
   p {
     font-size: 4vw;
     float: left;
-    width: 4vw;
+    width: 8vw;
     height: 5vh;
     line-height: 5vh;
-    margin-right: 2vw;
     vertical-align: middle;
     color: gray;
   }
   div {
-    width: 70%;
+    width: 75%;
     float: left;
     h1 {
+      width: 100%;
       font-size: 4vw;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     .middle {
       width: 100%;
@@ -54,16 +80,16 @@ export default {
         content: '/';
         display: inline-block;
       }
-      i:first-child::before{
+      i:first-child::before {
         content: '';
         display: inline-block;
       }
-      b{
+      b {
+        width: 100%;
         font-size: 3vw;
         color: gray;
         font-weight: 400;
       }
-
     }
   }
   .iconfont {

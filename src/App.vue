@@ -7,14 +7,31 @@
       <van-tab title="发现" to="">内容 4</van-tab>
     </van-tabs>
     <router-view></router-view>
+    <Footer v-show="songUrl!=''"></Footer>
   </div>
 </template>
 <script>
 import '@/lib/index.css'
+import Footer from '@/components/Footer.vue'
+import { mapState } from 'vuex'
+
 export default {
-  
+  components: {
+    Footer
+  },
+  data() {
+    return {
+      
+    }
+  },
+  computed:{
+    ...mapState({songUrl:'songUrl'})
+  },
+  methods: {
+    
+  }
 }
 </script>
 <style lang="less">
-
+@import url('//at.alicdn.com/t/c/font_3616554_md2t3xwyui.css');
 </style>
