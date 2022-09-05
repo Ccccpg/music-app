@@ -11,9 +11,9 @@
             </div>
           </div>
           <div class="bottom">
-            <p v-if="mdesc.creator">创建者：<img :src="creator.avatarUrl" alt="">{{'   '+mdesc.creator.nickname}}</p>
-            <p>曲目：{{mdesc.trackCount}}首</p>
-            <p>播放次数：{{playCount}}</p>
+            <p v-if="mdesc.creator" class="van-ellipsis">创建者：<img :src="creator.avatarUrl" alt="">{{'   '+mdesc.creator.nickname}}</p>
+            <p class="van-ellipsis">曲目：{{mdesc.trackCount}}首</p>
+            <p class="van-ellipsis">播放次数：{{playCount}}</p>
           </div>
         </div>
       </van-swipe-item>
@@ -88,7 +88,7 @@ export default {
         return (this.finished = true)
       }
       this.songlists = [...this.songlists, ...res.songs]
-      this.num += 15
+      this.num += 50
       this.UPATESONGLISTS(this.songlists)
       this.loading = false
     },

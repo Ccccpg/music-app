@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { getAlbum } from '@/api/getAlbumByid'
+
 import { mapMutations, mapState } from 'vuex'
 export default {
   name:'PlayLists',
@@ -24,9 +24,8 @@ export default {
   },
   methods: {
     //获取该歌曲的所在专辑
-    async getAlbum_(aid) {
-      const album = await getAlbum(aid)
-      this.$store.commit('GETALBUM', album)
+    getAlbum_(aid) {
+      this.$store.commit('GETALBUM', aid)
     },
     //更新vuex里的paused值为false
     play() {
@@ -34,9 +33,12 @@ export default {
     },
     //更新当前歌曲的数组下标
     updateSongIndex(){
-      this.UPATESONGINDEX(this.index)
+      this.RESETSONGINDEX()
+      setTimeout(() => {
+        this.UPATESONGINDEX(this.index)
+      }, 300);
     },
-    ...mapMutations(['UPATESONGINDEX'])
+    ...mapMutations(['UPATESONGINDEX','RESETSONGINDEX'])
     
   }
 }

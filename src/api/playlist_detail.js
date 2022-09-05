@@ -8,6 +8,6 @@ export function getPlaydesc(id) {
 export function getPlaylist(id,num) {
   return axios1({
     method: "get",
-    url: `/playlist/track/all?id=${id}&limit=15&offset=${num}`
+    url: `/playlist/track/all?id=${id}&limit=50&offset=${num}`
   })
 }

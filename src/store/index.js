@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import { getAlbum } from '@/api/getAlbumByid'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -13,14 +13,15 @@ export default new Vuex.Store({
       }
     },
     paused: true,
+    songName:"",
     songUrl: "",
     sid: 0,
-    lyric: '',
+    lyric: "",
     reallyric: [],
     currentTime: 0,
     alltime: 0,
     alltime_format: "",
-    songlists: [{ name: 'hhh' }],
+    songlists: [],
     songindex: -1,
   },
   getters: {
@@ -28,9 +29,20 @@ export default new Vuex.Store({
       return state.album.data.album.picUrl
     },
     process(state) {
-      return ((state.currentTime / (state.alltime * 1000)) * 100).toFixed(2)
+      return Math.ceil((state.currentTime / (state.alltime * 1000) * 100))
+    },
+    currentTime_format(state){
+      let time1 = state.currentTime / 1000
+      let min = Math.floor(time1 / 60)
+      let sec=time1-min*60
+      return min+':'+sec
+    },
+    alltime_format(state){
+      let min = parseInt(state.alltime / 60)
+      let sec = state.alltime - min * 60
+      let all = min + ':' + sec
+      return all 
     }
-
   },
   actions: {
     //处理歌词数据
@@ -66,9 +78,12 @@ export default new Vuex.Store({
     // }
   },
   mutations: {
-    GETALBUM(context, value) {
-      this.state.album = value
+    //获取专辑信息
+    async GETALBUM(context, value) {
+      const album = await getAlbum(value)
+      this.state.album = album
     },
+    //获取歌曲的url
     GETSONGURL(context, value) {
       this.state.songUrl = value
     },
@@ -84,10 +99,6 @@ export default new Vuex.Store({
     //获取歌曲的所有时间
     GETALLTIME(context, value) {
       this.state.alltime = value
-      let min = parseInt(value / 60)
-      let sec = value - min * 60
-      let all = min + ':' + sec
-      this.state.alltime_format = all
     },
     CHANGEPAUSED(context, value) {
       if (value) {
@@ -104,13 +115,21 @@ export default new Vuex.Store({
     UPATESONGINDEX(context, value) {
       this.state.songindex = value
     },
+    //重置当前播放列表中_播放歌曲的数组下标为-1
+    RESETSONGINDEX(context,value){
+      this.state.songindex=-1
+    },
     //更新当前播放歌曲的id
     UPDATESONGID(context, value) {
       this.state.sid = value
     },
-    //更新当前播放歌曲的歌词
-    UPDATESONGLYRIC(context, value) {
-      this.state.lyric = value
+    // //更新当前播放歌曲的歌词
+    // UPDATESONGLYRIC(context, value) {
+    //   this.state.lyric = value
+    // },
+    //获取歌曲名
+    GETSONGNAME(context, value){
+      this.state.songName = value
     },
   },
 })

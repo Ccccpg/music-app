@@ -2,7 +2,16 @@
   <div class="footer_detail">
     <van-image width="100vw" height="100vh" lazy-load :src="albumCover" alt="" class="bgc" />
 
-    <van-image width="80vw" height="80vw" lazy-load :src="albumCover" class="bot_img" v-if="isshowCover" @click="showOrhide" />
+    <div class="Cover" v-if="isshowCover" @click="showOrhide">
+      <van-image width="80vw" height="80vw" lazy-load :src="albumCover" class="bot_img" />
+      <div class="middle">
+        <h3>{{songName}}</h3>
+        <div class="bottom">
+          <p>{{currentTime_format}}</p>
+          <p>{{alltime_format}}</p>
+        </div>
+      </div>
+    </div>
     <transition name="van-slide-right">
       <div class="lyric" v-if="!isshowCover" @click="showOrhide" ref="alllyric">
         <!-- <div class="alllyric" ref="alllyric"> -->
@@ -17,13 +26,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'FooterDetail',
   props: ['album', 'albumCover', 'process', 'play', 'pause'],
   computed: {
-    ...mapState({ reallyric: 'reallyric', currentTime: 'currentTime', paused: 'paused' })
+    ...mapState({ reallyric: 'reallyric', currentTime: 'currentTime', paused: 'paused', songName: 'songName' }),
+    ...mapGetters({ alltime_format: 'alltime_format', currentTime_format: 'currentTime_format' })
   },
   data() {
     return {
@@ -62,14 +72,30 @@ export default {
   .bgc {
     filter: blur(10vw) brightness(50%);
   }
-  .bot_img {
+  .Cover {
     position: absolute;
     top: 10%;
     left: 50%;
-    width: 70vw;
-    height: 70vw;
+    width: 80vw;
+    height: 60vh;
     transform: translateX(-50%);
-    box-shadow: 2px 4px 10px 5px rgba(0, 0, 0, 0.2);
+    .middle {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      color: #fff;
+      .bottom {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 3vh;
+        p {
+          color: #fff;
+          opacity: 0.8;
+        }
+      }
+    }
   }
   .lyric {
     position: absolute;
@@ -81,18 +107,18 @@ export default {
     overflow: scroll;
     p {
       color: #fff;
-      font-size: 25px;
+      font-size: 20px;
       margin-bottom: 6px;
       opacity: 0.8;
     }
     .active {
       color: #fff;
-      font-size: 30px;
       font-weight: 800;
       margin-bottom: 15px;
       opacity: 1;
     }
   }
+
   .van-progress {
     position: absolute;
     top: 80%;
@@ -109,6 +135,7 @@ export default {
     height: 10vw;
     transform: translateX(-50%);
     box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
   }
 }
 </style>
