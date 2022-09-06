@@ -11,3 +11,9 @@ export function getSongLyric(sid){
     url:`/lyric?id=${sid}`
   })
 }
+export function getSongdetail(sid){
+  return axios1({
+    method: 'get',
+    url: `/song/detail?ids=${sid}`
+  })
+}

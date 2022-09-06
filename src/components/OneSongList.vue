@@ -1,11 +1,11 @@
 <template>
-  <div class="oneplaylist clearbox" @click="getAlbum_(aid),updateSongIndex(),play()">
+  <div class="oneplaylist clearbox" @click="getSongDetail(),updateSongIndex(),play()">
     <p>{{index+1}}</p>
     <div>
       <h1>{{songname}}</h1>
       <div class="middle van-ellipsis">
         <i v-for="item in author" :key="item.id">{{item.name}}</i>
-        <b>—{{al.name}}</b>
+        <!-- <b>—{{al.name}}</b> -->
       </div>
     </div>
     <span class="iconfont icon-bofangMV" v-if="mv!=0"></span>
@@ -14,32 +14,39 @@
 </template>
 
 <script>
-
-import { mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
+import { getSongdetail } from '@/api/getSongByid.js'
 export default {
-  name:'PlayLists',
-  props: ['aid', 'index', 'songname', 'author', 'mv', 'al'],
+  name: 'OneSongList',
+  props: ['index', 'songname', 'author', 'mv', 'sid'],
   computed: {
-    ...mapState({ paused: 'paused' })
+    ...mapState({ paused: 'paused' }),
+    ...mapGetters({albumCover:'albumCover'})
   },
   methods: {
     //获取该歌曲的所在专辑
-    getAlbum_(aid) {
-      this.$store.commit('GETALBUM', aid)
-    },
+    // getAlbum_(aid) {
+    //   this.$store.commit('GETALBUM', aid)
+    // },
     //更新vuex里的paused值为false
     play() {
       this.$store.commit('CHANGEPAUSED', true)
     },
     //更新当前歌曲的数组下标
-    updateSongIndex(){
+    updateSongIndex() {
       this.RESETSONGINDEX()
       setTimeout(() => {
         this.UPATESONGINDEX(this.index)
-      }, 300);
+      }, 300)
     },
-    ...mapMutations(['UPATESONGINDEX','RESETSONGINDEX'])
-    
+    //获取歌曲的详情
+    async getSongDetail() {
+      const detail = await getSongdetail(this.sid)
+      console.log(detail.data.songs[0].al.picUrl)
+      this.$store.commit('GETALBUMCOVER', detail.data.songs[0].al.picUrl)
+    },
+    ...mapMutations(['UPATESONGINDEX', 'RESETSONGINDEX'])
+    //获取歌曲详细信息
   }
 }
 </script>
@@ -86,12 +93,12 @@ export default {
         content: '';
         display: inline-block;
       }
-      b {
-        width: 100%;
-        font-size: 3vw;
-        color: gray;
-        font-weight: 400;
-      }
+      // b {
+      //   width: 100%;
+      //   font-size: 3vw;
+      //   color: gray;
+      //   font-weight: 400;
+      // }
     }
   }
   .iconfont {

@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <van-tabs>
+    <van-tabs class="Apptop">
       <van-tab title="首页" to="/home"></van-tab>
       <van-tab title="我的" to="/my">我的</van-tab>
-      <van-tab title="广场" to="square">广场</van-tab>
+      <van-tab title="搜索" to="/search"></van-tab>
       <van-tab title="发现" to="">内容 4</van-tab>
     </van-tabs>
     <router-view></router-view>
@@ -34,4 +34,12 @@ export default {
 </script>
 <style lang="less">
 @import url('//at.alicdn.com/t/c/font_3616554_md2t3xwyui.css');
+.Apptop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  .van-tabs__line{
+    z-index: 0;
+  }
+}
 </style>

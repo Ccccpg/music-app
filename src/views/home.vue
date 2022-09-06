@@ -37,15 +37,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.van-swipe {
-  margin-top: 1vh;
-  .van-swipe-item {
-    display: flex;
-    justify-content: center;
-    padding: 3vw;
-    .van-image {
-      width: 100%;
-      box-shadow: 1px 2px 8px 4px rgba(0, 0, 0, 0.2);
+.home {
+  background-color: #f7f8fa;
+  .van-swipe {
+    margin-top: 1vh;
+    .van-swipe-item {
+      display: flex;
+      justify-content: center;
+      padding: 3vw;
+      .van-image {
+        width: 100%;
+        box-shadow: 1px 2px 8px 4px rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }

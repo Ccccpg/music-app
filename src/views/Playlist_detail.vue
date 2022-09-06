@@ -40,14 +40,14 @@
     </div>
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <!-- <van-cell v-for="(item,index) in songs" :key="item.id" :title="index+1+item.name" /> -->
-      <Playlists v-for="(item1,index) in songlists" :key="item1.id" :songname="item1.name" :index="index" :author="item1.ar" :mv="item1.mv" :al="item1.al" :aid="item1.al.id" :sid="item1.id"></Playlists>
+      <OneSongList v-for="(item1,index) in songlists" :key="item1.id" :songname="item1.name" :index="index" :author="item1.ar" :mv="item1.mv"  :sid="item1.id"></OneSongList>
     </van-list>
   </div>
 </template>
 
 <script>
 import { getPlaylist, getPlaydesc } from '@/api/playlist_detail'
-import Playlists from '@/components/OneSongList.vue'
+import OneSongList from '@/components/OneSongList.vue'
 import { mapMutations } from 'vuex'
 export default {
   name: 'playlist_detail',
@@ -98,7 +98,7 @@ export default {
     ...mapMutations(['UPATESONGLISTS'])
   },
   components: {
-    Playlists
+    OneSongList
   }
 }
 </script>

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getAlbum } from '@/api/getAlbumByid'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -20,9 +19,9 @@ export default new Vuex.Store({
     reallyric: [],
     currentTime: 0,
     alltime: 0,
-    alltime_format: "",
     songlists: [],
     songindex: -1,
+    search_SongResult:[]
   },
   getters: {
     albumCover(state) {
@@ -79,9 +78,13 @@ export default new Vuex.Store({
   },
   mutations: {
     //获取专辑信息
-    async GETALBUM(context, value) {
-      const album = await getAlbum(value)
-      this.state.album = album
+    // async GETALBUM(context, value) {
+    //   const album = await getAlbum(value)
+    //   this.state.album = album
+    // },
+    //获取专辑封面
+    GETALBUMCOVER(context, value){
+      this.state.album.data.album.picUrl=value
     },
     //获取歌曲的url
     GETSONGURL(context, value) {
@@ -123,13 +126,14 @@ export default new Vuex.Store({
     UPDATESONGID(context, value) {
       this.state.sid = value
     },
-    // //更新当前播放歌曲的歌词
-    // UPDATESONGLYRIC(context, value) {
-    //   this.state.lyric = value
-    // },
     //获取歌曲名
     GETSONGNAME(context, value){
       this.state.songName = value
     },
+    //获取搜索返回的歌曲列表
+    GETSEARCHSONGRES(context,value){
+
+      this.state.search_SongResult=value
+    }
   },
 })

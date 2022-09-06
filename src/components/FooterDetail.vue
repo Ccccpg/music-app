@@ -2,16 +2,19 @@
   <div class="footer_detail">
     <van-image width="100vw" height="100vh" lazy-load :src="albumCover" alt="" class="bgc" />
 
-    <div class="Cover" v-if="isshowCover" @click="showOrhide">
-      <van-image width="80vw" height="80vw" lazy-load :src="albumCover" class="bot_img" />
-      <div class="middle">
-        <h3>{{songName}}</h3>
-        <div class="bottom">
-          <p>{{currentTime_format}}</p>
-          <p>{{alltime_format}}</p>
+    <transition name="van-slide-left">
+      <div class="Cover" v-if="isshowCover" @click="showOrhide">
+        <van-image width="80vw" height="80vw" lazy-load :src="albumCover" class="bot_img" />
+        <div class="middle">
+          <h3>{{songName}}</h3>
+          <div class="bottom">
+            <p>{{currentTime_format}}</p>
+            <p>{{alltime_format}}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
+
     <transition name="van-slide-right">
       <div class="lyric" v-if="!isshowCover" @click="showOrhide" ref="alllyric">
         <!-- <div class="alllyric" ref="alllyric"> -->

@@ -36,7 +36,6 @@ export default {
   },
   data() {
     return {
-      num: 0,
       time1: null,
       show: false,
       songAllTime: 0
@@ -136,15 +135,11 @@ export default {
     pause() {
       console.log('暂停！')
       this.$refs.audio.pause()
-      this.num--
-      console.log('num:' + this.num)
       clearInterval(this.time1)
       this.$store.commit('CHANGEPAUSED', false)
     },
     //更新现在播放歌曲时间
     updateTime() {
-      this.num++
-      console.log('------------------------第' + this.num + '次调用')
       this.time1 = setInterval(() => {
         let currentTime = parseInt(this.$refs.audio.currentTime) * 1000
         this.$store.commit('UPDATETIME', currentTime)
