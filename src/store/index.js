@@ -1,54 +1,66 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
-
+import { getSongdetail, getSongLyric, getSongUrl } from '@/api/getSongByid'
 export default new Vuex.Store({
   state: {
-    album: {
-      data: {
-        album: {
-          picUrl: 'none'
-        }
-      }
-    },
-    paused: true,
-    songName:"",
-    songUrl: "",
-    sid: 0,
-    lyric: "",
-    reallyric: [],
-    currentTime: 0,
-    alltime: 0,
     songlists: [],
-    songindex: -1,
-    search_SongResult:[]
+    songdetail: {
+      al: {
+        name: '',
+        id: 0,
+        picUrl: ''
+      },
+      id: '',
+      mv: -1,
+      fee: -1,
+      dt: 1
+    },
+    songCanPlay: -1,
+    lyric_format: [],
+    alltime_format: '',
+    index: -1,
+    ispause: true,
+    url: '',
+    currentTime: 0,
+    currentTime_format: '',
+    process: 0,
+    searchSongLists:[],
+    keyword:''
   },
   getters: {
-    albumCover(state) {
-      return state.album.data.album.picUrl
-    },
-    process(state) {
-      return Math.ceil((state.currentTime / (state.alltime * 1000) * 100))
-    },
-    currentTime_format(state){
-      let time1 = state.currentTime / 1000
-      let min = Math.floor(time1 / 60)
-      let sec=time1-min*60
-      return min+':'+sec
-    },
-    alltime_format(state){
-      let min = parseInt(state.alltime / 60)
-      let sec = state.alltime - min * 60
-      let all = min + ':' + sec
-      return all 
-    }
   },
   actions: {
-    //处理歌词数据
-    getRealLyric(context, value) {
-      // const Reglyric = new RegExp(/\[\d*:\d*.\d*\]/g)
-      // const replacestr = ''
-      const reallyric = value.split(/\n/).map((item, index) => {
+    //更新歌曲细节
+    async updateSongDetail(context, value) {
+      let detail = await getSongdetail(value)
+      context.commit('UpdateSongDetail', detail.data.songs[0])
+    },
+    //更新歌曲能否播放状态
+    updateSongCanPlay(context, value) {
+      if (value) {
+        context.commit('UpdateSongCanPlay', value)
+      } else {
+        let v1;
+        if (this.state.songdetail.fee === 1) {
+          console.log('会员歌曲');
+          v1 = false
+        } else if (this.state.songdetail.fee === 4) {
+          console.log('需要购买专辑');
+          v1 = false
+        } else {
+          console.log('可以播放');
+          v1 = true
+        }
+        context.commit('UpdateSongCanPlay', v1)
+      }
+    },
+    //获取格式化歌词
+    async updateLyric(context) {
+      let lyric = await getSongLyric(this.state.songdetail.id)
+      let reallyric = lyric.data.lrc.lyric
+      //处理歌词
+      let reallyric01 = reallyric.split(/\n/).map((item, index) => {
         let min = item.slice(1, 3)
         let sec = item.slice(4, 6)
         let msec = item.slice(7, 10)
@@ -62,78 +74,112 @@ export default new Vuex.Store({
         }
         return { time, reallyric }
       })
-      reallyric.forEach((item, index) => {
-        if (index === reallyric.length - 1) {
+      reallyric01.forEach((item, index) => {
+        if (index === reallyric01.length - 1) {
           item.preTime = 0
         } else {
-          item.preTime = reallyric[index + 1].time
+          item.preTime = reallyric01[index + 1].time
         }
       });
-      context.commit('GETREALLYRIC', reallyric)
+      context.commit('UpdateLyric', reallyric01)
     },
-    // getProcess(context, value){
-    //   const process = Math.round(currentTime / alltime)
-    //   context.commit('GETPROCESS',process)
-    // }
+    //获取格式化总时长
+    updateAlltime(context) {
+      let time1 = parseInt(this.state.songdetail.dt / 1000)
+      let min = parseInt(time1 / 60)
+      let min1 = min < 10 ? '0' + min : min
+      let sec = time1 - 60 * min
+      let sec1 = sec < 10 ? '0' + sec : sec
+      let time2 = min1 + ':' + sec1
+      context.commit('UpdateAlltime', time2)
+    },
+    //更新歌曲url
+    async updateSongUrl(context) {
+      let surl = await getSongUrl(this.state.songdetail.id)
+      context.commit('UpdateSongUrl', surl.data.data[0].url)
+    },
+    //更新格式化当前时间
+    updateCurrentTime_format(context, value) {
+      let alltime1 = parseInt(value)
+      let min = parseInt(alltime1 / 60)
+      let min1 = min < 10 ? '0' + min : min
+      let sec = alltime1 - 60 * min
+      let sec1 = sec < 10 ? '0' + sec : sec
+      let alltime2 = min1 + ':' + sec1
+      context.commit('UpdateCurrentTime_format', alltime2)
+    },
+    //更新进度条
+    updateProcess(context) {
+      let nowprocess = ((this.state.currentTime) * 1000 / this.state.songdetail.dt) * 100
+      context.commit('UpdateProcess', nowprocess)
+    },
+    //自动播放下一首
+    autoPlayNext(context, value) {
+      this.dispatch('updateSongDetail', value)
+    },
   },
   mutations: {
-    //获取专辑信息
-    // async GETALBUM(context, value) {
-    //   const album = await getAlbum(value)
-    //   this.state.album = album
-    // },
-    //获取专辑封面
-    GETALBUMCOVER(context, value){
-      this.state.album.data.album.picUrl=value
-    },
-    //获取歌曲的url
-    GETSONGURL(context, value) {
-      this.state.songUrl = value
-    },
-    GETLYRIC(context, value) {
-      this.state.lyric = value
-    },
-    GETREALLYRIC(context, value) {
-      this.state.reallyric = value
-    },
-    UPDATETIME(context, value) {
-      this.state.currentTime = value
-    },
-    //获取歌曲的所有时间
-    GETALLTIME(context, value) {
-      this.state.alltime = value
-    },
-    CHANGEPAUSED(context, value) {
-      if (value) {
-        this.state.paused = false
+    //更新歌单列表
+    UpdateSongLists(state, value) {
+      if (value.length === 0) {
+        state.songlists = []
       } else {
-        this.state.paused = true
+        state.songlists = [...state.songlists, ...value]
+      }
+
+    },
+    //更新歌曲下标
+    UpdateSongIndex(state, value) {
+      if (isNaN(value)) {
+        state.index = this.state.songlists.indexOf(value)
+      } else {
+        state.index = value
       }
     },
-    //更新播放列表
-    UPATESONGLISTS(context, value) {
-      this.state.songlists = value
+    //更新按钮状态
+    UpdatePause(state, value) {
+      state.ispause = value
     },
-    //获取当前播放列表中_播放歌曲的数组下标
-    UPATESONGINDEX(context, value) {
-      this.state.songindex = value
+    //更新歌曲url
+    UpdateSongUrl(state, value) {
+      state.url = value
     },
-    //重置当前播放列表中_播放歌曲的数组下标为-1
-    RESETSONGINDEX(context,value){
-      this.state.songindex=-1
+    //更新歌曲细节
+    UpdateSongDetail(state, value) {
+      state.songdetail = value
     },
-    //更新当前播放歌曲的id
-    UPDATESONGID(context, value) {
-      this.state.sid = value
+    //更新歌曲能否播放状态
+    UpdateSongCanPlay(state, value) {
+      state.songCanPlay = value
     },
-    //获取歌曲名
-    GETSONGNAME(context, value){
-      this.state.songName = value
+    //更新格式化歌词
+    UpdateLyric(state, value) {
+      state.lyric_format = value
     },
-    //获取搜索返回的歌曲列表
-    GETSEARCHSONGRES(context,value){
-
-      this.state.search_SongResult=value
+    //获取格式化总时长
+    UpdateAlltime(state, value) {
+      state.alltime_format = value
+    },
+    //更新当前时间
+    UpdateCurrentTime(state, value) {
+      state.currentTime = value
+    },
+    //更新格式化当前时间
+    UpdateCurrentTime_format(state, value) {
+      state.currentTime_format = value
+    },
+    //更新进度条
+    UpdateProcess(state, value) {
+      state.process = value
+    },
+    //更新搜索歌单列表
+    GetSearchSongResult(state, value){
+      state.searchSongLists=[...state.searchSongLists,...value]
+    },
+    //更新关键词
+    UpdateKeyword(state, value){
+      state.keyword=value
     }
+
   },
 })

@@ -1,5 +1,5 @@
 import axios1 from "@/utils/request";
-export function getSong(sid){
+export function getSongUrl(sid){
   return axios1({
     method:"get",
     url:`/song/url?id=${sid}`

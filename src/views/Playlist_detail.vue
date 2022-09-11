@@ -2,7 +2,7 @@
   <div>
     <van-swipe class="my-swipe" indicator-color="white" :show-indicators="false">
       <van-swipe-item>
-        <van-image fit="cover" :src="mdesc.coverImgUrl" alt=""/>
+        <van-image fit="cover" :src="mdesc.coverImgUrl" alt="" />
         <div class="left">
           <div class="top">
             {{mdesc.name}}
@@ -38,28 +38,22 @@
         </span>
       </van-button>
     </div>
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <!-- <van-cell v-for="(item,index) in songs" :key="item.id" :title="index+1+item.name" /> -->
-      <OneSongList v-for="(item1,index) in songlists" :key="item1.id" :songname="item1.name" :index="index" :author="item1.ar" :mv="item1.mv"  :sid="item1.id"></OneSongList>
-    </van-list>
+    <AllSongLists :id="id" :from="'playlists'"></AllSongLists>
   </div>
 </template>
 
 <script>
-import { getPlaylist, getPlaydesc } from '@/api/playlist_detail'
-import OneSongList from '@/components/OneSongList.vue'
-import { mapMutations } from 'vuex'
+import { getPlaydesc } from '@/api/playlist_detail'
+
+import AllSongLists from '@/components/AllSongLists.vue'
 export default {
   name: 'playlist_detail',
   data() {
     return {
-      loading: true,
-      finished: false,
       mdesc: {},
-      songlists: [],
-      num: 0
     }
   },
+
   computed: {
     id() {
       return location.hash.split('?')[1].split('=')[1]
@@ -72,33 +66,25 @@ export default {
     },
     creator() {
       return this.mdesc.creator
-    }
+    },
   },
+
+  watch: {
+    
+  },
+
+  components: {
+    AllSongLists
+  },
+
   created() {
     getPlaydesc(this.id).then(res => {
       this.mdesc = res.data.playlist
     })
-    this.initinfor()
+    
   },
-  methods: {
-    async initinfor() {
-      this.loading = true
-      const { data: res } = await getPlaylist(this.id, this.num)
-      if (res.songs.length === 0) {
-        return (this.finished = true)
-      }
-      this.songlists = [...this.songlists, ...res.songs]
-      this.num += 50
-      this.UPATESONGLISTS(this.songlists)
-      this.loading = false
-    },
-    onLoad() {
-      this.initinfor()
-    },
-    ...mapMutations(['UPATESONGLISTS'])
-  },
-  components: {
-    OneSongList
+  beforeDestroy(){
+    this.$store.commit('UpdateSongLists', [])
   }
 }
 </script>

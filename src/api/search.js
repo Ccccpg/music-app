@@ -12,9 +12,9 @@ export function getRecommend(keyword) {
   })
 }
 //获取搜索结果
-export function getSearchResult(keyword) {
+export function getSearchResult(keyword,num) {
   return axios1({
     method: 'get',
-    url: `/search?keywords=${keyword}&type=1`
+    url: `/search?keywords=${keyword}&type=1&offset=${num}`
   })
 }

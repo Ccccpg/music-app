@@ -1,12 +1,12 @@
 <template>
   <div class="footer_detail">
-    <van-image width="100vw" height="100vh" lazy-load :src="albumCover" alt="" class="bgc" />
+    <van-image width="100vw" height="100vh" lazy-load :src="songdetail.al.picUrl" alt="" class="bgc" />
 
     <transition name="van-slide-left">
       <div class="Cover" v-if="isshowCover" @click="showOrhide">
-        <van-image width="80vw" height="80vw" lazy-load :src="albumCover" class="bot_img" />
+        <van-image width="80vw" height="80vw" lazy-load :src="songdetail.al.picUrl" class="bot_img" />
         <div class="middle">
-          <h3>{{songName}}</h3>
+          <h3>{{songdetail.name}}</h3>
           <div class="bottom">
             <p>{{currentTime_format}}</p>
             <p>{{alltime_format}}</p>
@@ -18,25 +18,24 @@
     <transition name="van-slide-right">
       <div class="lyric" v-if="!isshowCover" @click="showOrhide" ref="alllyric">
         <!-- <div class="alllyric" ref="alllyric"> -->
-        <p v-for="item in reallyric" :key="item.id" :class="{active:(item.time<=currentTime&&item.preTime>currentTime)}">{{item.reallyric}}</p>
+        <p v-for="item in lyric_format" :key="item.id" :class="{active:(item.time<=(currentTime*1000)&&item.preTime>(currentTime*1000))}">{{item.reallyric}}</p>
       </div>
     </transition>
 
     <van-progress :percentage="process" stroke-width="5" :show-pivot="false" color="white" track-color="gray" />
-    <van-button icon="play" @click="play" round v-if="paused" />
+    <van-button icon="play" @click="play" round v-if="ispause" />
     <van-button icon="pause" @click="pause" round v-else />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'FooterDetail',
-  props: ['album', 'albumCover', 'process', 'play', 'pause'],
+  props: [ 'process', 'play', 'pause', 'ispause', 'currentTime_format', 'alltime_format'],
   computed: {
-    ...mapState({ reallyric: 'reallyric', currentTime: 'currentTime', paused: 'paused', songName: 'songName' }),
-    ...mapGetters({ alltime_format: 'alltime_format', currentTime_format: 'currentTime_format' })
+    ...mapState({ lyric_format: 'lyric_format', songdetail: 'songdetail', currentTime: 'currentTime' })
   },
   data() {
     return {

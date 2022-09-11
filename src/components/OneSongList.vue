@@ -1,5 +1,5 @@
 <template>
-  <div class="oneplaylist clearbox" @click="getSongDetail(),updateSongIndex(),play()">
+  <div class="oneplaylist clearbox">
     <p>{{index+1}}</p>
     <div>
       <h1>{{songname}}</h1>
@@ -14,49 +14,15 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
-import { getSongdetail } from '@/api/getSongByid.js'
 export default {
   name: 'OneSongList',
   props: ['index', 'songname', 'author', 'mv', 'sid'],
-  computed: {
-    ...mapState({ paused: 'paused' }),
-    ...mapGetters({albumCover:'albumCover'})
-  },
-  methods: {
-    //获取该歌曲的所在专辑
-    // getAlbum_(aid) {
-    //   this.$store.commit('GETALBUM', aid)
-    // },
-    //更新vuex里的paused值为false
-    play() {
-      this.$store.commit('CHANGEPAUSED', true)
-    },
-    //更新当前歌曲的数组下标
-    updateSongIndex() {
-      this.RESETSONGINDEX()
-      setTimeout(() => {
-        this.UPATESONGINDEX(this.index)
-      }, 300)
-    },
-    //获取歌曲的详情
-    async getSongDetail() {
-      const detail = await getSongdetail(this.sid)
-      console.log(detail.data.songs[0].al.picUrl)
-      this.$store.commit('GETALBUMCOVER', detail.data.songs[0].al.picUrl)
-    },
-    ...mapMutations(['UPATESONGINDEX', 'RESETSONGINDEX'])
-    //获取歌曲详细信息
-  }
 }
 </script>
 
 <style lang="less" scoped>
 .oneplaylist {
   margin: 5vw;
-  // padding: 2vw;
-  // border-radius: 4vw;
-  // box-shadow: 1px 2px 4px 2px rgba(0, 0, 0, .1);
   p {
     font-size: 4vw;
     float: left;
@@ -93,12 +59,6 @@ export default {
         content: '';
         display: inline-block;
       }
-      // b {
-      //   width: 100%;
-      //   font-size: 3vw;
-      //   color: gray;
-      //   font-weight: 400;
-      // }
     }
   }
   .iconfont {

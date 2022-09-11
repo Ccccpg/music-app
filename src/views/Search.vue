@@ -1,7 +1,6 @@
 <template>
   <div class="search">
     <van-search ref="search" v-model="value" placeholder="请输入搜索关键词" @search="onSearch" @input="getSearchRecommend" @blur="hideSearchRecommend" />
-
     <van-list v-if="recommend.length!=0">
       <van-cell v-for="item in recommend" :key="item.id" :title="item.keyword" @click="getKetword(item.keyword)" />
     </van-list>
@@ -9,13 +8,17 @@
     <van-row>
       <van-col :class="{hot:(index<3)}" :span="12" v-for="(item,index) in hotLists" :key="item.id"><span>{{(index+1)}}</span>{{item.searchWord}}</van-col>
     </van-row>
+
+    <AllSongLists :id="'search'" :from="'searchRes'"></AllSongLists>
   </div>
 </template>
 
 <script>
-import { getSearchHot, getRecommend, getSearchResult } from '@/api/search'
+import { getSearchHot, getRecommend } from '@/api/search'
+// import SearchResult from '@/components/SearchResult.vue'
+import AllSongLists from '@/components/AllSongLists.vue'
 import { Toast } from 'vant'
-import SearchResult from '@/components/SearchResult.vue'
+import { mapState } from 'vuex'
 export default {
   name: 'Search',
   data() {
@@ -26,26 +29,31 @@ export default {
       finished: false,
       hotLists: [],
       recommend: [],
-      keyword: '',
       show: false
     }
   },
+  computed:{
+    ...mapState({searchSongLists:'searchSongLists'})
+  },
   watch: {
-    '$store.state.search_SongResult': {
-      handler(newval) {
-        if (this.$store.state.search_SongResult.length != 0) {
-          this.$store.commit('UPATESONGLISTS',this.$store.state.search_SongResult)
-          location.href = '/#/searchResult'
-        }
-      }
+    // '$store.state.search_SongResult': {
+    //   handler(newval) {
+    //     if (this.$store.state.search_SongResult.length != 0) {
+    //       this.$store.commit('UPATESONGLISTS',this.$store.state.search_SongResult)
+    //       location.href = '/#/searchResult'
+    //     }
+    //   }
+    // }
+    searchSongLists(nv){
+      console.log('1223');
+      console.log(nv);
     }
   },
   methods: {
     onSearch(val) {
       console.log('触发一次搜索')
       Toast(val)
-      this.keyword = this.value
-      this.getSearchRes()
+      this.$store.commit('UpdateKeyword',val)
     },
     //获取热搜榜
     async getHotLists() {
@@ -65,12 +73,7 @@ export default {
     },
     //获取搜索关键词
     getKetword(keyword) {
-      this.keyword = keyword
-    },
-    //获取搜索结果
-    async getSearchRes() {
-      const res = await getSearchResult(this.keyword)
-      this.$store.commit('GETSEARCHSONGRES', res.data.result.songs)
+      this.$store.commit('UpdateKeyword',keyword)
     },
     //隐藏搜索建议
     hideSearchRecommend() {
@@ -81,7 +84,7 @@ export default {
     this.getHotLists()
   },
   components: {
-    SearchResult
+    AllSongLists
   }
 }
 </script>
@@ -91,9 +94,11 @@ export default {
   width: 100vw;
   background-color: #f7f8fa;
   .van-list {
-    width: 90vw;
-    margin: 0 auto;
-    box-shadow: 0 2px 9px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 98px;
+    left: 0;
+    width: 100vw;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
   h1 {
     margin-top: 10px;
