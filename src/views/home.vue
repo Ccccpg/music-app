@@ -6,7 +6,7 @@
       </van-swipe-item>
     </van-swipe>
     <Iconlist></Iconlist>
-    <Findplaylists></Findplaylists>
+    <ShowListsCover :title="'精选歌单'" :type="'playlists'"></ShowListsCover>
   </div>
 
 </template>
@@ -14,7 +14,7 @@
 // @ is an alias to /src
 import { getBanner } from '@/api/home'
 import Iconlist from '@/components/Iconlist.vue'
-import Findplaylists from '@/components/Findplaylists.vue'
+import ShowListsCover from '@/components/ShowListsCover.vue'
 export default {
   name: 'home',
   data() {
@@ -31,7 +31,7 @@ export default {
   },
   components: {
     Iconlist,
-    Findplaylists
+    ShowListsCover
   }
 }
 </script>

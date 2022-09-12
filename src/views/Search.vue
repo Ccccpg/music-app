@@ -1,22 +1,28 @@
 <template>
   <div class="search">
     <van-search ref="search" v-model="value" placeholder="请输入搜索关键词" @search="onSearch" @input="getSearchRecommend" @blur="hideSearchRecommend" />
-    <van-list v-if="recommend.length!=0">
-      <van-cell v-for="item in recommend" :key="item.id" :title="item.keyword" @click="getKetword(item.keyword)" />
-    </van-list>
+    <div class="recommends" ref="recommends">
+      <van-list>
+        <van-cell v-for="item in recommend" :key="item.id" :title="item.keyword" @click="getKeyword(item.keyword)" />
+      </van-list>
+    </div>
+
+    <ShowListsCover v-if="searchSingersLists.length!=0" :title="'相关歌手'" :type="'singers'"></ShowListsCover>
+    <ShowListsCover v-if="searchAlbumLists.length!=0" :title="'相关专辑'" :type="'album'"></ShowListsCover>
+    <AllSongLists v-if="searchSongLists.length!=0" :id="'search'" :from="'searchRes'"></AllSongLists>
+    <ShowListsCover v-if="searchUsersLists.length!=0" :title="'相关用户'" :type="'users'"></ShowListsCover>
     <h1>热搜榜</h1>
     <van-row>
       <van-col :class="{hot:(index<3)}" :span="12" v-for="(item,index) in hotLists" :key="item.id"><span>{{(index+1)}}</span>{{item.searchWord}}</van-col>
     </van-row>
 
-    <AllSongLists :id="'search'" :from="'searchRes'"></AllSongLists>
   </div>
 </template>
 
 <script>
 import { getSearchHot, getRecommend } from '@/api/search'
-// import SearchResult from '@/components/SearchResult.vue'
 import AllSongLists from '@/components/AllSongLists.vue'
+import ShowListsCover from '@/components/ShowListsCover.vue'
 import { Toast } from 'vant'
 import { mapState } from 'vuex'
 export default {
@@ -32,28 +38,30 @@ export default {
       show: false
     }
   },
-  computed:{
-    ...mapState({searchSongLists:'searchSongLists'})
+  computed: {
+    ...mapState({ searchSongLists: 'searchSongLists', keyword: 'keyword', searchSingersLists: 'searchSingersLists', searchUsersLists: 'searchUsersLists', searchAlbumLists: 'searchAlbumLists', searchSongLists: 'searchSongLists' })
   },
   watch: {
-    // '$store.state.search_SongResult': {
-    //   handler(newval) {
-    //     if (this.$store.state.search_SongResult.length != 0) {
-    //       this.$store.commit('UPATESONGLISTS',this.$store.state.search_SongResult)
-    //       location.href = '/#/searchResult'
-    //     }
-    //   }
-    // }
-    searchSongLists(nv){
-      console.log('1223');
-      console.log(nv);
+    value(nv){
+      this.$refs.recommends.style.display = 'block'
+    },
+    keyword(nv){
+      this.onSearch(nv)
     }
   },
   methods: {
     onSearch(val) {
       console.log('触发一次搜索')
-      Toast(val)
-      this.$store.commit('UpdateKeyword',val)
+      Toast('已经显示"' + val + '"的相关内容')
+      this.$store.commit('UpdateKeyword', val)
+      //获取相关专辑信息
+      this.$store.dispatch('updateSearchAlbum', this.keyword)
+      //获取相关用户信息
+      this.$store.dispatch('updateSearchUsers', this.keyword)
+      //获取相关歌手信息
+      this.$store.dispatch('updateSearchSingers', this.keyword)
+      //获取相关单曲信息
+      this.$store.commit('UpdateSearchSongResult', this.keyword)
     },
     //获取热搜榜
     async getHotLists() {
@@ -72,19 +80,24 @@ export default {
       }
     },
     //获取搜索关键词
-    getKetword(keyword) {
+    getKeyword(keyword) {
+      // this.$store.commit('UpdateKeyword', keyword)
+      console.log(keyword);
       this.$store.commit('UpdateKeyword',keyword)
     },
     //隐藏搜索建议
-    hideSearchRecommend() {
-      this.recommend = []
-    }
+    hideSearchRecommend(e) {
+      setTimeout(() => {
+        this.$refs.recommends.style.display = 'none'
+      },300)
+    },
   },
   created() {
     this.getHotLists()
   },
   components: {
-    AllSongLists
+    AllSongLists,
+    ShowListsCover
   }
 }
 </script>
@@ -99,6 +112,7 @@ export default {
     left: 0;
     width: 100vw;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 99;
   }
   h1 {
     margin-top: 10px;

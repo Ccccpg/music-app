@@ -3,6 +3,7 @@
     <van-list v-if="from==='playlists'" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <OneSongList @click.native="getSongDetail(item1.id),getItem(item1)" v-for="(item1,index) in songlists" :key="item1.id" :songname="item1.name" :index="index" :author="item1.ar" :mv="item1.mv" :sid="item1.id"></OneSongList>
     </van-list>
+    <h3 v-if="from==='searchRes'">相关单曲</h3>
     <van-list v-if="from==='searchRes'" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <OneSongList @click.native="getSongDetail(item2.id),getItem(item2)" v-for="(item2,index) in searchSongLists" :key="item2.id" :songname="item2.name" :index="index" :author="item2.ar" :mv="item2.mv" :sid="item2.id"></OneSongList>
     </van-list>
@@ -13,7 +14,7 @@
 <script>
 import { getPlaylist } from '@/api/playlist_detail'
 import OneSongList from '@/components/OneSongList.vue'
-import { getSearchResult } from '@/api/search'
+import { getSearchSongsResult } from '@/api/search'
 import { mapState } from 'vuex'
 export default {
   data() {
@@ -22,7 +23,8 @@ export default {
       finished: false,
       num: 0,
       item: null,
-      isNext: false
+      isNext: false,
+      flag: true
     }
   },
   computed: {
@@ -55,7 +57,8 @@ export default {
         this.$store.dispatch('updateSongCanPlay', -1)
       }
     },
-    keyword(nv) {
+    keyword() {
+      this.num = 0
       this.initinfor()
     }
   },
@@ -70,7 +73,7 @@ export default {
       this.item = item
     },
     //加载歌单数据
-    async initinfor() {
+    async initinfor(nv) {
       //加载非搜索歌单列表
       if (this.id != 'search' && this.from === 'playlists') {
         this.loading = true
@@ -86,11 +89,21 @@ export default {
       else if (this.id === 'search' && this.from === 'searchRes') {
         this.loading = true
         if (this.keyword && this.keyword != '') {
-          const res = await getSearchResult(this.keyword,this.num)
-          this.$store.commit('GetSearchSongResult', res.data.result.songs)
+          const res = await getSearchSongsResult(this.keyword, this.num)
+          if (!res.data.result.songs) {
+            return (this.finished = true)
+          }
+          if (this.num === 0) {
+            this.$store.commit('UpdateSearchSongResult', ['ischange', res.data.result.songs])
+            console.log(res.data.result.songs)
+          } else {
+            this.$store.commit('UpdateSearchSongResult', res.data.result.songs)
+            console.log(res.data.result.songs)
+          }
           this.num += 30
         }
         this.loading = false
+      } else {
       }
     },
     //上拉加载
@@ -107,5 +120,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+h3 {
+  padding: 2vw;
+  font-size: 4vw;
+}
 </style>

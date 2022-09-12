@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 import { getSongdetail, getSongLyric, getSongUrl } from '@/api/getSongByid'
+import { getSearchAlbumResult, getSearchUsersResult, getSearchSingersResult } from '@/api/search'
 export default new Vuex.Store({
   state: {
     songlists: [],
@@ -25,8 +26,11 @@ export default new Vuex.Store({
     currentTime: 0,
     currentTime_format: '',
     process: 0,
-    searchSongLists:[],
-    keyword:''
+    searchSongLists: [],
+    searchAlbumLists: [],
+    searchUsersLists: [],
+    searchSingersLists: [],
+    keyword: ''
   },
   getters: {
   },
@@ -117,6 +121,21 @@ export default new Vuex.Store({
     autoPlayNext(context, value) {
       this.dispatch('updateSongDetail', value)
     },
+    //更新 搜索 相关专辑信息
+    async updateSearchAlbum(context, value) {
+      let res = await getSearchAlbumResult(value)
+      context.commit('UpdateSearchAlbum', res.data.result.albums)
+    },
+    //更新 搜索 相关用户信息
+    async updateSearchUsers(context, value) {
+      let res = await getSearchUsersResult(value)
+      context.commit('UpdateSearchUsers', res.data.result.userprofiles)
+    },
+    //更新 搜索 相关歌手信息
+    async updateSearchSingers(context, value) {
+      let res = await getSearchSingersResult(value)
+      context.commit('UpdateSearchSingers', res.data.result.artists)
+    }
   },
   mutations: {
     //更新歌单列表
@@ -173,12 +192,29 @@ export default new Vuex.Store({
       state.process = value
     },
     //更新搜索歌单列表
-    GetSearchSongResult(state, value){
-      state.searchSongLists=[...state.searchSongLists,...value]
+    UpdateSearchSongResult(state, value) {
+      if (value[0] === 'ischange') {
+        state.searchSongLists = [...value[1]]
+      } else {
+        state.searchSongLists = [...state.searchSongLists, ...value]
+      }
+
     },
     //更新关键词
-    UpdateKeyword(state, value){
-      state.keyword=value
+    UpdateKeyword(state, value) {
+      state.keyword = value
+    },
+    //更新 搜索 相关专辑信息
+    UpdateSearchAlbum(state, value) {
+      state.searchAlbumLists = [...value]
+    },
+    //更新 搜索 相关用户信息
+    UpdateSearchUsers(state, value) {
+      state.searchUsersLists = [...value]
+    },
+    //更新 搜索 相关歌手信息
+    UpdateSearchSingers(state, value){
+      state.searchSingersLists=[...value]
     }
 
   },
