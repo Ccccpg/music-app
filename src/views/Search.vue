@@ -89,7 +89,7 @@ export default {
     hideSearchRecommend(e) {
       setTimeout(() => {
         this.$refs.recommends.style.display = 'none'
-      },300)
+      },200)
     },
   },
   created() {

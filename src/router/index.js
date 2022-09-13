@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Playlist_detail from '@/views/Playlist_detail.vue'
 import Album_detail from '@/views/Album_detail'
 import Search from '@/views/Search.vue'
+import Singer_detail from '@/views/Singer_detail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -28,6 +29,12 @@ const routes = [
     name: 'search',
     component: Search
   },
+  {
+    path: '/singer',
+    name: 'singer',
+    component: Singer_detail
+    
+  }
 ]
 
 const router = new VueRouter({

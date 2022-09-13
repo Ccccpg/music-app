@@ -30,7 +30,19 @@ export default new Vuex.Store({
     searchAlbumLists: [],
     searchUsersLists: [],
     searchSingersLists: [],
-    keyword: ''
+    keyword: '',
+    albumdetail:{
+      album:{
+        picUrl:'',
+        subType:'',
+        name:'',
+        artists:[],
+        size:-1
+      },
+      songs:[]
+    },
+    singerDetail:{},
+    singerTop50:[]
   },
   getters: {
   },
@@ -215,6 +227,18 @@ export default new Vuex.Store({
     //更新 搜索 相关歌手信息
     UpdateSearchSingers(state, value){
       state.searchSingersLists=[...value]
+    },
+    //更新 专辑 的详情信息
+    UpdateAlbumDetail(state, value){
+      state.albumdetail=value
+    },
+    //更新歌手详情
+    UpdateSingerDetail(state, value){
+      state.singerDetail=value
+    },
+    //更新歌手热门前50首歌
+    UpdateSingerTop50(state, value){
+      state.singerTop50=[...value]
     }
 
   },

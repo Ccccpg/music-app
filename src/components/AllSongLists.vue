@@ -8,6 +8,14 @@
       <OneSongList @click.native="getSongDetail(item2.id),getItem(item2)" v-for="(item2,index) in searchSongLists" :key="item2.id" :songname="item2.name" :index="index" :author="item2.ar" :mv="item2.mv" :sid="item2.id"></OneSongList>
     </van-list>
 
+    <van-list v-if="from==='album'" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <OneSongList @click.native="getSongDetail(item2.id),getItem(item2)" v-for="(item2,index) in albumdetail.songs" :key="item2.id" :songname="item2.name" :index="index" :author="item2.ar" :mv="item2.mv" :sid="item2.id"></OneSongList>
+    </van-list>
+
+    <van-list v-if="from==='singerTop50'" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <OneSongList @click.native="getSongDetail(item2.id),getItem(item2)" v-for="(item2,index) in singerTop50" :key="item2.id" :songname="item2.name" :index="index" :author="item2.ar" :mv="item2.mv" :sid="item2.id"></OneSongList>
+    </van-list>
+
   </div>
 </template>
 
@@ -28,7 +36,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({ searchSongLists: 'searchSongLists', keyword: 'keyword', songdetail: 'songdetail', songCanPlay: 'songCanPlay', index: 'index', songlists: 'songlists' })
+    ...mapState({ searchSongLists: 'searchSongLists', keyword: 'keyword', songdetail: 'songdetail', songCanPlay: 'songCanPlay', index: 'index', songlists: 'songlists', albumdetail: 'albumdetail', singerTop50: 'singerTop50' })
   },
   props: ['id', 'from'],
   watch: {
@@ -84,7 +92,6 @@ export default {
         // this.songlists = [...this.songlists, ...res.songs]
         this.num += 50
         this.$store.commit('UpdateSongLists', res.songs)
-        this.loading = false
       } //加载搜索歌单列表
       else if (this.id === 'search' && this.from === 'searchRes') {
         this.loading = true
@@ -95,16 +102,14 @@ export default {
           }
           if (this.num === 0) {
             this.$store.commit('UpdateSearchSongResult', ['ischange', res.data.result.songs])
-            console.log(res.data.result.songs)
           } else {
             this.$store.commit('UpdateSearchSongResult', res.data.result.songs)
-            console.log(res.data.result.songs)
           }
           this.num += 30
         }
-        this.loading = false
       } else {
       }
+      this.loading = false
     },
     //上拉加载
     onLoad() {

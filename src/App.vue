@@ -7,7 +7,7 @@
       <van-tab title="发现" to="">内容 4</van-tab>
     </van-tabs>
     <router-view></router-view>
-    <Footer v-show="songUrl!=''"></Footer>
+    <Footer v-show="url!=''"></Footer>
   </div>
 </template>
 <script>
@@ -20,25 +20,21 @@ export default {
     Footer
   },
   data() {
-    return {
-      
-    }
+    return {}
   },
-  computed:{
-    ...mapState({songUrl:'songUrl'})
+  computed: {
+    ...mapState({ url: 'url' })
   },
-  methods: {
-    
-  }
+  methods: {}
 }
 </script>
 <style lang="less">
 @import url('//at.alicdn.com/t/c/font_3616554_md2t3xwyui.css');
-.Apptop{
+.Apptop {
   position: fixed;
   top: 0;
   left: 0;
-  .van-tabs__line{
+  .van-tabs__line {
     z-index: 0;
   }
 }

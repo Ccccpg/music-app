@@ -39,7 +39,7 @@
       <!-- 展示搜索歌手封面列表 -->
       <van-swipe v-if="type==='singers'" :loop="false" :show-indicators="false" :width="150" :height="100">
         <van-swipe-item v-for="item in searchSingersLists" :key="item.id">
-          <router-link class="singer" :to="{path:'/album',query:{id:item.id} }">
+          <router-link class="singer" :to="{path:'/singer',query:{id:item.id} }">
             <van-image lazy-load class="singerCover" round :src="item.picUrl" fit="cover" width="50" height="50" />
             <div class="van-ellipsis singername">{{item.name}}</div>
           </router-link>

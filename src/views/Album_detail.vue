@@ -2,25 +2,31 @@
   <div>
     <van-swipe class="my-swipe" indicator-color="white" :show-indicators="false">
       <van-swipe-item>
-        <van-image fit="cover" :src="mdesc.coverImgUrl" alt="" />
+        <van-image fit="cover" :src="albumdetail.album.picUrl" alt="" />
         <div class="left">
           <div class="top">
-            {{mdesc.name}}
-            <div class="tags">
-              <van-tag round size="large" color="red" v-for="(item,index) in tags" :key="index">{{item}}</van-tag>
-            </div>
+            {{albumdetail.album.name}}
+            <br>
+            <van-tag round size="medium" color="red">{{albumdetail.album.subType}}</van-tag>
+            <p v-for="item in albumdetail.album.artists" :key="item.id" class="van-ellipsis artists">歌手：{{item.name}}</p>
           </div>
           <div class="bottom">
-            <p v-if="mdesc.creator" class="van-ellipsis">创建者：<img :src="creator.avatarUrl" alt="">{{'   '+mdesc.creator.nickname}}</p>
-            <p class="van-ellipsis">曲目：{{mdesc.trackCount}}首</p>
-            <p class="van-ellipsis">播放次数：{{playCount}}</p>
+            <p class="van-ellipsis">曲目：{{albumdetail.album.size}}首</p>
+            <p>发行时间：{{publishTime_format}}</p>
           </div>
         </div>
       </van-swipe-item>
       <van-swipe-item>
-        <span>{{mdesc.description}}</span>
+
+        <div class="description">
+          <h3 v-if="albumdetail.album.description!=''">专辑介绍</h3>
+          <h3 v-else>该专辑还没有简介！</h3>
+          <br>
+          <p>{{albumdetail.album.description}}</p>
+        </div>
       </van-swipe-item>
     </van-swipe>
+
     <div class="middle_button">
       <van-button color="red">
         <span class="iconfont icon-comments-fill">
@@ -38,50 +44,52 @@
         </span>
       </van-button>
     </div>
-    <AllSongLists :id="id" :from="'playlists'"></AllSongLists>
+
+    <AllSongLists :id="id" :from="'album'"></AllSongLists>
   </div>
 </template>
 
 <script>
-import { getPlaydesc } from '@/api/playlist_detail'
+import { getAlbumDesc } from '@/api/getAlumByid'
 import AllSongLists from '@/components/AllSongLists.vue'
+import { mapState } from 'vuex'
 export default {
-  name: 'playlist_detail',
+  name: 'Album_detail',
   data() {
     return {
-      mdesc: {},
+      mdesc: {}
     }
   },
   computed: {
     id() {
       return location.hash.split('?')[1].split('=')[1]
     },
-    tags() {
-      return this.mdesc.tags
+    //格式化发行时间
+    publishTime_format() {
+      let msec = this.albumdetail.album.publishTime
+      let year = new Date(msec).getFullYear()
+      let month = new Date(msec).getMonth() + 1
+      let day = new Date(msec).getDate()
+      return year + '-' + month + '-' + day
     },
-    playCount() {
-      return this.mdesc.playCount
-    },
-    creator() {
-      return this.mdesc.creator
-    },
+    ...mapState({ albumdetail: 'albumdetail' })
   },
 
-  watch: {
-    
+  watch: {},
+  methods: {
+    async getAlbum_Desc() {
+      let res = await getAlbumDesc(this.id)
+      this.$store.commit('UpdateAlbumDetail', res.data)
+    }
   },
-
   components: {
     AllSongLists
   },
 
   created() {
-    getPlaydesc(this.id).then(res => {
-      this.mdesc = res.data.playlist
-    })
-    
+    this.getAlbum_Desc()
   },
-  beforeDestroy(){
+  beforeDestroy() {
     this.$store.commit('UpdateSongLists', [])
   }
 }
@@ -112,9 +120,14 @@ export default {
           font-size: 3vw;
         }
       }
+      .artists {
+        margin-top: 5px;
+        font-weight: 400;
+        font-size: 3vw;
+      }
     }
     .bottom {
-      margin-top: 1vh;
+      margin-top: 3vh;
       p {
         font-size: 3vw;
         font-weight: 400;
@@ -141,7 +154,7 @@ export default {
   height: 7vh;
   background-color: red;
   box-shadow: 1px 4px 9px 5px #ff000033;
-  margin-top: 2vh;
+  // margin-top: 2vh;
   .van-button {
     height: 100%;
     line-height: 7vh;
@@ -156,5 +169,19 @@ export default {
       }
     }
   }
+}
+.description {
+  width: 100%;
+  height: 100%;
+  font-size: 4vw;
+  overflow: scroll;
+}
+.bgc {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 </style>
