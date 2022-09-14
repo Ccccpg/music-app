@@ -5,6 +5,9 @@ import Playlist_detail from '@/views/Playlist_detail.vue'
 import Album_detail from '@/views/Album_detail'
 import Search from '@/views/Search.vue'
 import Singer_detail from '@/views/Singer_detail'
+import Login from '@/views/Login'
+import User from '@/views/User'
+import store from '@/store/index'
 Vue.use(VueRouter)
 
 const routes = [
@@ -33,8 +36,18 @@ const routes = [
     path: '/singer',
     name: 'singer',
     component: Singer_detail
-    
-  }
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: User
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+
 ]
 
 const router = new VueRouter({
@@ -42,5 +55,28 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+router.beforeEach((to, from, next) => {
+  if (to.path === '/user') {
+    if (localStorage.isLogin && localStorage.getItem('token') != '' && localStorage.getItem('cookie') != '') {
+      next()
+    } else {
+      next('/login')
+    }
+  } else if (to.path === '/login') {
+    if (localStorage.isLogin && localStorage.getItem('token')!='' && localStorage.getItem('cookie')!='') {
+      next('/user')
+    } else {
+      next()
+    }
+  }
+  else {
+    next()
+  }
+})
+//解决跳转报错
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
 export default router

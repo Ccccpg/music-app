@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <van-tabs class="Apptop">
+    <van-tabs class="Apptop"  sticky>
       <van-tab title="首页" to="/home"></van-tab>
-      <van-tab title="我的" to="/my">我的</van-tab>
+      <van-tab title="我的" to="/user"></van-tab>
       <van-tab title="搜索" to="/search"></van-tab>
-      <van-tab title="发现" to="">内容 4</van-tab>
     </van-tabs>
     <router-view></router-view>
     <Footer v-show="url!=''"></Footer>

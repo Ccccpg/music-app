@@ -42,7 +42,16 @@ export default new Vuex.Store({
       songs:[]
     },
     singerDetail:{},
-    singerTop50:[]
+    singerTop50:[],
+    isLogin:false,
+    userInfor:{
+      token:'',
+      cookie:'',
+      profile:{
+        avatarUrl:'',//头像
+        nickname:''//用户名
+      }
+    }
   },
   getters: {
   },
@@ -147,7 +156,7 @@ export default new Vuex.Store({
     async updateSearchSingers(context, value) {
       let res = await getSearchSingersResult(value)
       context.commit('UpdateSearchSingers', res.data.result.artists)
-    }
+    },
   },
   mutations: {
     //更新歌单列表
@@ -239,6 +248,14 @@ export default new Vuex.Store({
     //更新歌手热门前50首歌
     UpdateSingerTop50(state, value){
       state.singerTop50=[...value]
+    },
+    //更新用户登陆信息
+    UpdateUserInfor(state, value) {
+      state.userInfor=value
+    },
+    //更新用户是否登陆 的状态
+    UpdateIsLogin(state, value){
+      state.isLogin=value
     }
 
   },
