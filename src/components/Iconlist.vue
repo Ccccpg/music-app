@@ -45,14 +45,13 @@ export default {}
   padding: 2vw;
   span {
     svg {
-      width: 8vw;
-      height: 8vw;
+      width: .9375rem;
+      height:.9375rem;
     }
   }
   p {
-    margin-top: 0.5vh;
-    font-size: 3vw;
-    font-weight: 800;
+    margin-top: .0625rem;
+    font-size: 12px;
   }
 }
 </style>

@@ -81,8 +81,8 @@ export default {
 <style lang="less" scoped>
 .top {
   position: relative;
-  width: 100vw;
-  height: 40vh;
+  width: 100%;
+  height: 7.5rem;
   overflow: hidden;
   .singerCover {
     .van-image {
@@ -93,10 +93,10 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100vw;
-    height: 10vh;
-    padding: 15px;
-    font-size: 4vh;
+    width: 100%;
+    height: 1.875rem;
+    padding: .625rem;
+    font-size: 30px;
     background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
     // filter: blur(80px);
     p {
@@ -108,13 +108,13 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  height: 7vh;
+  height: 1.25rem;
   background-color: red;
   box-shadow: 1px 4px 9px 5px #ff000033;
   // margin-top: 2vh;
   .van-button {
     height: 100%;
-    line-height: 7vh;
+    line-height: 1.25rem;
     span {
       display: inline-block;
       height: 100%;

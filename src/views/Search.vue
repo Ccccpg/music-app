@@ -104,7 +104,7 @@ export default {
 
 <style lang="less" scoped>
 .search {
-  width: 100vw;
+  width: 100%;
   background-color: #f7f8fa;
   .van-list {
     position: fixed;
@@ -113,26 +113,27 @@ export default {
     width: 100vw;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     z-index: 99;
+    // background-color: liner();
   }
   h1 {
-    margin-top: 10px;
-    margin-left: 5vw;
-    font-size: 18px;
+    margin-top: .625rem;
+    margin-left: .625rem;
+    font-size: 20px;
   }
   .van-row {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: .625rem;
+    padding: .3125rem;
     background-color: #fff;
     // box-shadow: 0 2px 9px 4px rgba(0, 0, 0, 0.1);
     .van-col {
-      font-size: 15px;
-      padding: 5px;
+      font-size: 16px;
+      padding: .1875rem;
       color: gray;
       span {
         display: inline-block;
         width: 12%;
         text-align: center;
-        margin-right: 10px;
+        margin-right: .3125rem;
       }
     }
     .hot {

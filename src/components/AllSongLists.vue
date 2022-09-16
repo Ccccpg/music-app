@@ -127,7 +127,7 @@ export default {
 
 <style lang="less" scoped>
 h3 {
-  padding: 2vw;
-  font-size: 4vw;
+  padding: .625rem;
+  font-size: 20px;
 }
 </style>

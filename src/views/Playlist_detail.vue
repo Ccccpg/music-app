@@ -6,9 +6,8 @@
         <div class="left">
           <div class="top">
             {{mdesc.name}}
-            <div class="tags">
-              <van-tag round size="large" color="red" v-for="(item,index) in tags" :key="index">{{item}}</van-tag>
-            </div>
+            <br>
+            <span class="tag" v-for="(item,index) in tags" :key="index">{{item}}</span>
           </div>
           <div class="bottom">
             <p v-if="mdesc.creator" class="van-ellipsis">创建者：<img :src="creator.avatarUrl" alt="">{{'   '+mdesc.creator.nickname}}</p>
@@ -49,7 +48,7 @@ export default {
   name: 'playlist_detail',
   data() {
     return {
-      mdesc: {},
+      mdesc: {}
     }
   },
   computed: {
@@ -64,12 +63,10 @@ export default {
     },
     creator() {
       return this.mdesc.creator
-    },
+    }
   },
 
-  watch: {
-    
-  },
+  watch: {},
 
   components: {
     AllSongLists
@@ -79,9 +76,8 @@ export default {
     getPlaydesc(this.id).then(res => {
       this.mdesc = res.data.playlist
     })
-    
   },
-  beforeDestroy(){
+  beforeDestroy() {
     this.$store.commit('UpdateSongLists', [])
   }
 }
@@ -90,8 +86,8 @@ export default {
 <style lang="less" scoped>
 .van-swipe-item {
   width: 100%;
-  height: 30vh;
-  padding: 5vw;
+  height: 5rem;
+  padding: 0.625rem;
   .van-image {
     width: 50%;
     border-radius: 10%;
@@ -100,29 +96,30 @@ export default {
   .left {
     width: 50%;
     float: right;
-    padding-left: 5vw;
-    font-size: 5vw;
+    padding-left: 0.3125rem;
+    font-size: 18px;
     font-weight: 800;
     .top {
-      .tags {
-        height: 4.5vh;
-        overflow: hidden;
-        .van-tag {
-          margin-right: 1vw;
-          font-size: 3vw;
-        }
+      .tag{
+        height: .9375rem;
+        padding: .0313rem .125rem;
+        margin-right: .125rem;
+        background-color: red;
+        font-size: 12px;
+        color: #fff;
+        border-radius: .625rem;
       }
     }
     .bottom {
-      margin-top: 1vh;
+      margin-top: .625rem;
       p {
-        font-size: 3vw;
+        font-size: 12px;
         font-weight: 400;
       }
       p {
         img {
           border-radius: 50%;
-          width: 5vw;
+          width: .5rem;
           vertical-align: middle;
           box-shadow: none;
         }
@@ -130,29 +127,25 @@ export default {
     }
   }
 }
-.van-cell__title {
-  width: 5px;
-  font-size: 2vh;
-}
 .middle_button {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  height: 7vh;
+  height: 1.25rem;
   background-color: red;
   box-shadow: 1px 4px 9px 5px #ff000033;
-  margin-top: 2vh;
+  margin-top: .3125rem;
   .van-button {
     height: 100%;
-    line-height: 7vh;
+    line-height: 1.25rem;
     span {
       display: inline-block;
       height: 100%;
-      font-size: 4vh;
+      font-size: 25px;
       color: white;
       p {
         float: right;
-        font-size: 2vh;
+        font-size: 14px;
       }
     }
   }

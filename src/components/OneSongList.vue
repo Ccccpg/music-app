@@ -22,13 +22,13 @@ export default {
 
 <style lang="less" scoped>
 .oneplaylist {
-  margin: 5vw;
+  margin: .5rem .3125rem;
   p {
-    font-size: 4vw;
+    font-size: 15px;
     float: left;
-    width: 8vw;
-    height: 5vh;
-    line-height: 5vh;
+    width: .9375rem;
+    height: .9375rem;
+    line-height: .9375rem;
     vertical-align: middle;
     color: gray;
   }
@@ -37,7 +37,7 @@ export default {
     float: left;
     h1 {
       width: 100%;
-      font-size: 4vw;
+      font-size: 17px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -45,7 +45,7 @@ export default {
     .middle {
       width: 100%;
       i {
-        font-size: 3vw;
+        font-size: 14px;
         color: gray;
         overflow: hidden;
         white-space: nowrap;
@@ -63,8 +63,8 @@ export default {
   }
   .iconfont {
     float: right;
-    height: 5vh;
-    line-height: 5vh;
+    height: .9375rem;
+    line-height: .9375rem;
   }
 }
 </style>

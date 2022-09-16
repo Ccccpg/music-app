@@ -95,29 +95,25 @@ export default {
 <style lang="less" scoped>
 .footer {
   position: fixed;
-  top: 90vh;
+  bottom: 0;
   left: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 10vh;
+  height: 1.875rem;
   background-color: #fff;
-  padding: 1vw 5vw;
+  padding: 0.0625rem 0.3125rem;
   box-shadow: 0 2px 6px 3px rgba(0, 0, 0, 0.1);
   .van-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 10vw;
+    width: 1.25rem;
     padding: 0;
-    svg {
-      width: 10vw;
-      height: 10vw;
-    }
     .van-image {
-      width: 10vw;
-      height: 10vw;
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
   .middle {
@@ -127,10 +123,8 @@ export default {
     width: 70%;
     height: 100%;
     .songname {
+      font-size: 16px;
       width: 100%;
-    }
-    .van-progress {
-      width: 60vw;
     }
     .time {
       .alltime {
@@ -145,8 +139,8 @@ export default {
     }
   }
   .van-button {
-    width: 10vw;
-    height: 10vw;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }
 </style>

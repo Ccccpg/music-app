@@ -1,17 +1,11 @@
 <template>
   <div class="footer_detail">
-    <van-image width="100vw" height="100vh" lazy-load :src="songdetail.al.picUrl" alt="" class="bgc" />
+    <img lazy-load :src="songdetail.al.picUrl" alt="" class="bgc" />
 
     <transition name="van-slide-left">
       <div class="Cover" v-if="isshowCover" @click="showOrhide">
-        <van-image width="80vw" height="80vw" lazy-load :src="songdetail.al.picUrl" class="bot_img" />
-        <div class="middle">
-          <h3>{{songdetail.name}}</h3>
-          <div class="bottom">
-            <p>{{currentTime_format}}</p>
-            <p>{{alltime_format}}</p>
-          </div>
-        </div>
+        <van-image lazy-load :src="songdetail.al.picUrl" class="bot_img" />
+        <h3>{{songdetail.name}}</h3>
       </div>
     </transition>
 
@@ -22,9 +16,15 @@
       </div>
     </transition>
 
-    <van-progress :percentage="process" stroke-width="5" :show-pivot="false" color="white" track-color="gray" />
-    <van-button icon="play" @click="play" round v-if="ispause" />
-    <van-button icon="pause" @click="pause" round v-else />
+    <div class="bottom">
+      <div class="time">
+        <p>{{currentTime_format}}</p>
+        <p>{{alltime_format}}</p>
+      </div>
+      <van-progress :percentage="process" stroke-width="5" :show-pivot="false" color="white" track-color="gray" />
+      <van-button icon="play" @click="play" round v-if="ispause" />
+      <van-button icon="pause" @click="pause" round v-else />
+    </div>
   </div>
 </template>
 
@@ -33,7 +33,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'FooterDetail',
-  props: [ 'process', 'play', 'pause', 'ispause', 'currentTime_format', 'alltime_format'],
+  props: ['process', 'play', 'pause', 'ispause', 'currentTime_format', 'alltime_format'],
   computed: {
     ...mapState({ lyric_format: 'lyric_format', songdetail: 'songdetail', currentTime: 'currentTime' })
   },
@@ -66,50 +66,37 @@ export default {
 <style lang="less" scoped>
 .footer_detail {
   position: relative;
-  top: 0;
-  left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   .bgc {
+    width: 100%;
+    height: 100%;
     filter: blur(10vw) brightness(50%);
   }
   .Cover {
     position: absolute;
     top: 10%;
     left: 50%;
-    width: 80vw;
-    height: 60vh;
+    width: 8.125rem;
+    height: 8.125rem;
     transform: translateX(-50%);
-    .middle {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
+    h3 {
       color: #fff;
-      .bottom {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-top: 3vh;
-        p {
-          color: #fff;
-          opacity: 0.8;
-        }
-      }
+      opacity: 0.8;
     }
   }
   .lyric {
     position: absolute;
     top: 10%;
     left: 50%;
-    width: 80vw;
-    height: 60vh;
+    width: 8.125rem;
+    height: 60%;
     transform: translateX(-50%);
     overflow: scroll;
     p {
       color: #fff;
-      font-size: 20px;
+      font-size: 25px;
       margin-bottom: 6px;
       opacity: 0.8;
     }
@@ -120,24 +107,34 @@ export default {
       opacity: 1;
     }
   }
-
-  .van-progress {
+  .bottom {
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: space-evenly;
     position: absolute;
-    top: 80%;
+    top: 75%;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
-    opacity: 0.7;
-  }
-  .van-button {
-    position: absolute;
-    top: 85%;
-    left: 50%;
-    width: 10vw;
-    height: 10vw;
-    transform: translateX(-50%);
-    box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
-    opacity: 0.8;
+    width: 8.125rem;
+    height: 30%;
+    color: #fff;
+    .time {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .van-progress {
+      width: 100%;
+      margin-top: .3125rem;
+      opacity: 0.7;
+    }
+    .van-button {
+      width: .9375rem;
+      height: .9375rem;
+      box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
+      opacity: 0.8;
+      margin-top: .3125rem;
+    }
   }
 }
 </style>

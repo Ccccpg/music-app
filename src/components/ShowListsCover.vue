@@ -98,7 +98,7 @@ export default {
   .mlist {
     .van-swipe__track {
       .van-swipe-item {
-        margin: 8px;
+        margin: .3125rem;
         .normal {
           position: relative;
           display: flex;
@@ -118,11 +118,12 @@ export default {
           //播放次数
           .playCount {
             position: absolute;
-            top: 2px;
-            right: 5px;
+            top: .0625rem;
+            right: .125rem;
+            height: .5rem;
             color: #fff;
             font-size: 15px;
-            line-height: 3vh;
+            line-height: .5rem;
             span {
               float: right;
             }
@@ -139,7 +140,6 @@ export default {
           width: 100%;
           height: 80%;
           background-color: #fff;
-          line-height: 66px;
           box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.1);
           .singername {
             font-weight: 800;
